@@ -1,101 +1,270 @@
-# TeamFlow – Advanced Project & Team Management System
+# TeamFlow – Project & Team Management System
 
-A full-stack assignment implementation using React + Vite, FastAPI, SQLAlchemy, Alembic, PostgreSQL, JWT authentication and role-based access.
+TeamFlow is a full-stack web application for managing projects, assigning tasks, tracking progress, and organizing team activities in one place.
+
+The application provides a centralized dashboard where users can manage their projects and tasks based on their assigned roles.
+
+## Tech Stack
+
+**Frontend**
+
+- React.js
+- Vite
+- CSS
+- Axios
+
+**Backend**
+
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- JWT Authentication
+
+**Database**
+
+- PostgreSQL
+
+**Tools**
+
+- Git and GitHub
+- Swagger UI
+- Alembic
 
 ## Features
-- JWT register/login and hashed passwords
-- Roles: `admin`, `project_manager`, `team_member`
-- Dashboard counts, task status summary and recent activity
-- Project CRUD and project member assignment
-- Task CRUD, assignment, priority, status, deadline, search and filters
-- Task comments and activity history
-- Pagination on task listing
-- Swagger API docs at `/docs`
-- Environment-based configuration and CORS
 
-## Requirements
-- Python 3.10+
-- Node.js 18+
-- PostgreSQL 14+
+### Authentication
 
-## 1. Database
-Create a PostgreSQL database:
+- User registration and login
+- Password hashing
+- JWT-based authentication
+- Role-based access
+
+### Dashboard
+
+- Overview of projects and tasks
+- Task status tracking
+- Project statistics
+
+### Project Management
+
+- Create and view projects
+- Store project descriptions and details
+- Track project progress
+
+### Task Management
+
+- Create and view tasks
+- Assign tasks to users
+- Set task priorities and due dates
+- Track task status
+
+### Team Management
+
+- View registered team members
+- Display user roles
+
+### API
+
+- RESTful API built with FastAPI
+- Request validation using Pydantic
+- Interactive API documentation through Swagger UI
+
+## Project Structure
+
+```text
+teamflow_advanced/
+│
+├── backend/
+│   ├── app/
+│   │   ├── routers/
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── init_db.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── schemas.py
+│   │   ├── security.py
+│   │   └── utils.py
+│   │
+│   ├── migrations/
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── api.js
+│   │   ├── main.jsx
+│   │   └── style.css
+│   ├── package.json
+│   └── .env.example
+│
+├── docs/
+│   └── ERD.md
+│
+├── .gitignore
+└── README.md
+```
+
+## Installation and Setup
+
+### Prerequisites
+
+Install the following before starting:
+
+- Python 3.12 or later
+- Node.js and npm
+- PostgreSQL
+- Git
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/sreeahillan/teamflow-advanced.git
+cd teamflow-advanced
+```
+
+### 2. Set up the PostgreSQL database
+
+Open PostgreSQL:
+
 ```bash
 sudo -u postgres psql
-CREATE DATABASE teamflow_advanced;
-CREATE USER teamflow_user WITH PASSWORD 'change_this_password';
-GRANT ALL PRIVILEGES ON DATABASE teamflow_advanced TO teamflow_user;
-\q
 ```
-If using PostgreSQL 15+, also run:
-```bash
-sudo -u postgres psql -d teamflow_advanced
+
+Create the database and user:
+
+```sql
+CREATE DATABASE teamflow_advanced;
+CREATE USER teamflow_user WITH PASSWORD 'your_password';
+
+GRANT ALL PRIVILEGES ON DATABASE teamflow_advanced TO teamflow_user;
+
+\c teamflow_advanced
+
 GRANT ALL ON SCHEMA public TO teamflow_user;
+ALTER SCHEMA public OWNER TO teamflow_user;
+
 \q
 ```
 
-## 2. Backend setup
+Use your own database password in the application configuration.
+
+### 3. Configure the backend
+
+Open a terminal:
+
 ```bash
 cd backend
-python -m venv venv
+
+python3 -m venv venv
 source venv/bin/activate
+
 pip install -r requirements.txt
+```
+
+Create your environment file:
+
+```bash
 cp .env.example .env
 ```
-Edit `backend/.env` and set your PostgreSQL URL and a long random `SECRET_KEY`.
 
-Create tables (simple first-run setup):
+Update the database connection and application settings in `backend/.env`.
+
+Example database URL:
+
+```env
+DATABASE_URL=postgresql+psycopg://teamflow_user:your_password@localhost:5432/teamflow_advanced
+```
+
+Set a strong, private JWT secret key in your environment configuration.
+
+### 4. Initialize the database
+
 ```bash
 python -m app.init_db
 ```
-Start API:
+
+### 5. Start the backend server
+
 ```bash
 uvicorn app.main:app --reload
 ```
-Open http://127.0.0.1:8000/docs
 
-**Create the first Admin:** register using `/api/auth/register`; the first registered account is automatically Admin. Later registrations are Team Members. Admins can change roles through the user management endpoint.
+Backend URL:
 
-## 3. Frontend setup
-Open a second terminal:
+http://127.0.0.1:8000
+
+Swagger API documentation:
+
+http://127.0.0.1:8000/docs
+
+### 6. Configure the frontend
+
+Open another terminal:
+
 ```bash
 cd frontend
+
 npm install
 cp .env.example .env
+```
+
+Check that the frontend API URL points to your local backend.
+
+### 7. Start the frontend
+
+```bash
 npm run dev
 ```
-Open the Vite URL shown (usually http://localhost:5173). Register/login and explore the dashboard.
 
-## 4. Typical demo flow
-1. Register the first user (Admin).
-2. Register another account (Team Member) in a separate browser/incognito session.
-3. Login as Admin and create a project.
-4. Add the Team Member to the project.
-5. Create tasks, set priorities/deadlines and assign them.
-6. Login as Team Member and update task status / add a comment.
-7. Show dashboard statistics and activity feed.
+Open the application:
 
-## 5. GitHub submission
-From the project root:
-```bash
-git init
-git add .
-git commit -m "Build TeamFlow project and task management system"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/teamflow-advanced.git
-git push -u origin main
-```
-Do not commit `.env`, `venv/`, `node_modules/`, or secrets. They are excluded by `.gitignore`.
+http://localhost:5173
 
-## 6. Submission checklist
-- [ ] GitHub repository link
-- [ ] Source code pushed
-- [ ] README setup instructions
-- [ ] `backend/requirements.txt`
-- [ ] Database relationship diagram (`docs/ERD.md`)
-- [ ] Swagger screenshots or Postman collection (`docs/TeamFlow.postman_collection.json`)
-- [ ] Screenshots: dashboard, projects, task list, task details/comments
-- [ ] 2–4 minute demo video (record screen + explain workflow)
+## API Documentation
 
-## Notes
-This is a practical starter implementation. Before production deployment, add refresh tokens, rate limiting, email verification, stronger audit policies, automated tests, and production secrets management. The API uses `create_all` for easy local setup; Alembic is configured and an initial migration can be generated with `alembic revision --autogenerate`.
+FastAPI provides interactive API documentation.
+
+Once the backend is running, visit:
+
+http://127.0.0.1:8000/docs
+
+You can use Swagger UI to inspect and test the available API endpoints.
+
+## Database Design
+
+The database uses PostgreSQL and SQLAlchemy models.
+
+The entity relationship diagram is available here:
+
+`docs/ERD.md`
+
+## Environment Variables
+
+Environment files contain local configuration and should not be committed to GitHub.
+
+The repository includes `.env.example` files as configuration templates.
+
+Create your own `.env` files when setting up the project.
+
+## Future Improvements
+
+- Project member assignment interface
+- Task comments and discussion
+- Advanced filtering and sorting
+- Pagination
+- More detailed activity history
+- Improved role and permission management
+- Automated testing
+
+## Author
+
+**Sree Ahilan**
+
+GitHub: https://github.com/sreeahillan
+
+---
+
+This project was developed as a full-stack application to practice frontend development, backend API development, database integration, and authentication.
